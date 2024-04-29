@@ -2,7 +2,7 @@
   "name": "podfi",
   "license": "MIT",
   "version": "0.1.0",
-  "description": "PodFi, a decentralized podcasting platform on the Avalanche blockchain, addresses these challenges by introducing tokenized rewards, a decentralized ad marketplace, and community-driven governance. It empowers creators, engages listeners, and revolutionizes podcast monetization through blockchain innovation.",
+  "description": "PodFi, a decentralized podcasting platform on the Scroll blockchain, addresses these challenges by introducing tokenized rewards, a decentralized ad marketplace, and community-driven governance. It empowers creators, engages listeners, and revolutionizes podcast monetization through blockchain innovation.",
   "scripts": {
     "prepare": "husky install",
     "compile": "hardhat compile",
