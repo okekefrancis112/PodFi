@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -12,6 +12,7 @@ contract PodFiToken is ERC20 {
 
     // Owner address for initial token distribution and management
     address public owner;
+    uint256 public initialSupply = 10000;
 
     // Struct to hold content engagement data
     struct Content {
@@ -29,7 +30,7 @@ contract PodFiToken is ERC20 {
         _;
     }
 
-    constructor(uint256 initialSupply) ERC20("PodFi", "POD") {
+    constructor() ERC20("PodFi", "POD") {
         _mint(msg.sender, initialSupply);
         owner = msg.sender;
     }
@@ -68,4 +69,4 @@ contract PodFiToken is ERC20 {
 }
 
 // Deployed Contract Address: 0x4efe6df3497A20c85b8fD5AC7105D61078EAC955
-// https://testnet.bscscan.com/address/0x4efe6df3497A20c85b8fD5AC7105D61078EAC955#code 
+// https://testnet.bscscan.com/address/0x4efe6df3497A20c85b8fD5AC7105D61078EAC955#code

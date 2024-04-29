@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import {FunctionsClient} from "@chainlink/contracts/src/v0.8/functions/dev/v1_0_0/FunctionsClient.sol";
+import {FunctionsClient} from "@chainlink/contracts/src/v0.8/functions/v1_0_0/FunctionsClient.sol";
 import {ConfirmedOwner} from "@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner.sol";
-import {FunctionsRequest} from "@chainlink/contracts/src/v0.8/functions/dev/v1_0_0/libraries/FunctionsRequest.sol";
+import {FunctionsRequest} from "@chainlink/contracts/src/v0.8/functions/v1_0_0/libraries/FunctionsRequest.sol";
 
 /**
  * @title Chainlink Functions example on-demand consumer contract example
@@ -16,6 +16,9 @@ contract FunctionsConsumer is FunctionsClient, ConfirmedOwner {
   bytes32 public s_lastRequestId;
   bytes public s_lastResponse;
   bytes public s_lastError;
+
+  event OCRResponse(bytes32 indexed requestId, bytes result, bytes err);
+
 
   constructor(address router, bytes32 _donId) FunctionsClient(router) ConfirmedOwner(msg.sender) {
     donId = _donId;
@@ -71,5 +74,6 @@ contract FunctionsConsumer is FunctionsClient, ConfirmedOwner {
   function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override {
     s_lastResponse = response;
     s_lastError = err;
+    emit OCRResponse(requestId, response, err);
   }
 }

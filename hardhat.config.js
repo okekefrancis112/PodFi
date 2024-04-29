@@ -1,76 +1,54 @@
-require("@nomicfoundation/hardhat-toolbox")
+require("dotenv").config({ path: ".env" });
+require("@nomiclabs/hardhat-ethers")
+require("@nomicfoundation/hardhat-verify")
 require("hardhat-contract-sizer")
-require("dotenv").config()
-require("./tasks")
-const { networks } = require("./networks")
 
-// Enable gas reporting (optional)
-const REPORT_GAS = process.env.REPORT_GAS?.toLowerCase() === "true" ? true : false
+const ETHEREUM_SEPOLIA_RPC_URL = process.env.ETHEREUM_SEPOLIA_RPC_URL
+const SCROLL_URL = process.env.SCROLL_URL
+const PRIVATE_KEY = process.env.PRIVATE_KEY
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
+const SCROLL_SCAN_API_KEY = process.env.SCROLL_SCAN_API_KEY
 
-const SOLC_SETTINGS = {
-  optimizer: {
-    enabled: true,
-    runs: 1_000,
-  },
-}
-
-/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  defaultNetwork: "localFunctionsTestnet",
-  solidity: {
-    compilers: [
-      {
-        version: "0.8.19",
-        settings: SOLC_SETTINGS,
-      },
-      {
-        version: "0.8.7",
-        settings: SOLC_SETTINGS,
-      },
-      {
-        version: "0.7.0",
-        settings: SOLC_SETTINGS,
-      },
-      {
-        version: "0.6.6",
-        settings: SOLC_SETTINGS,
-      },
-      {
-        version: "0.4.24",
-        settings: SOLC_SETTINGS,
-      },
-    ],
-  },
+  defaultNetwork: "hardhat",
   networks: {
-    ...networks,
+    sepolia: {
+      url: ETHEREUM_SEPOLIA_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 11155111,
+      // blockConfirmations: 6,
+    },
+    scrollSepolia: {
+      url: SCROLL_URL,
+      accounts: [PRIVATE_KEY],
+      // chainId: 534351,
+      // blockConfirmations: 6,
+    }
   },
   etherscan: {
-    apiKey: {
-      mainnet: networks.ethereum.verifyApiKey,
-      avalanche: networks.avalanche.verifyApiKey,
-      polygon: networks.polygon.verifyApiKey,
-      sepolia: networks.ethereumSepolia.verifyApiKey,
-      polygonMumbai: networks.polygonMumbai.verifyApiKey,
-      avalancheFujiTestnet: networks.avalancheFuji.verifyApiKey,
+    sepolia: ETHERSCAN_API_KEY,
+    scrollSepolia: SCROLL_SCAN_API_KEY
+  },
+  sourcify: {
+    // Disabled by default
+    // Doesn't need an API key
+    enabled: true
+  },
+  customChains: [
+    {
+      network: 'scrollSepolia',
+      chainId: 534351,
+      urls: {
+        apiURL: 'https://api-sepolia.scrollscan.com/api',
+        browserURL: 'https://sepolia.scrollscan.com/',
+      },
     },
-  },
-  gasReporter: {
-    enabled: REPORT_GAS,
-    currency: "USD",
-    outputFile: "gas-report.txt",
-    noColors: true,
-  },
+  ],
   contractSizer: {
     runOnCompile: false,
     only: ["FunctionsConsumer", "AutomatedFunctionsConsumer", "FunctionsBillingRegistry"],
   },
-  paths: {
-    sources: "./contracts",
-    tests: "./test",
-    cache: "./build/cache",
-    artifacts: "./build/artifacts",
+  solidity: {
+    compilers: [{ version: "0.8.20" }, { version: "0.8.9" }, { version: "0.6.6" }],
   },
-  mocha: {
-    timeout: 200000, // 200 seconds max for running tests
-  },
-}
+};

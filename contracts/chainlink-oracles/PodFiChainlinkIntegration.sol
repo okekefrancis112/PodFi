@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract PodFiContract is ChainlinkClient, ERC721 {
     using Chainlink for Chainlink.Request;
 
+    // State variables
     uint256 private fee;
     address private oracle;
     bytes32 private jobId;
@@ -30,22 +31,23 @@ contract PodFiContract is ChainlinkClient, ERC721 {
     mapping(address => ListenerData) public listenerData;
 
     constructor() ERC721("PodFiNFT", "PFNFT") {
-        setPublicChainlinkToken();
+        _setPublicChainlinkToken();
 
-        //Avalanche Fuji:
-        oracle = 0x022EEA14A6010167ca026B32576D6686dD7e85d2;
+        //Scroll Sepolia:
+        oracle = 0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD;
 
         //GET>uint256:
-        jobId = ca98366cc7314957b8c012c72f05aeeb;
+        jobId = "ca98366cc7314957b8c012c72f05aeeb";
         fee = 0.1 * 10 ** 18; // Chainlink fee
     }
 
     // Function to request listener data from Chainlink oracle
     function requestListenerData(address listener) public returns (bytes32 requestId) {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+        // bytes32 jobId = "ca98366cc7314957b8c012c72f05aeeb";
+        Chainlink.Request memory request = _buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         // Add listener address to the request
-        request.add("listener", addressToString(listener));
-        return sendChainlinkRequestTo(oracle, request, fee);
+        request._add("listener", addressToString(listener));
+        return _sendChainlinkRequestTo(oracle, request, fee);
     }
 
     // Callback function for Chainlink oracle

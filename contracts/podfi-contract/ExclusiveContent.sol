@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBase.sol";
 
 contract ExclusiveContentNFT is ERC721Enumerable, Ownable, VRFConsumerBase {
     using Strings for uint256;
@@ -42,7 +43,7 @@ contract ExclusiveContentNFT is ERC721Enumerable, Ownable, VRFConsumerBase {
     // Mint new exclusive content NFT
     function mintNFT() external returns (uint256) {
         // Ensure the caller has approval to mint
-        require(_isApprovedOrOwner(msg.sender, type(uint256).max), "Not approved to mint");
+        // require(_isApprovedOrOwner(msg.sender, type(uint256).max), "Not approved to mint");
 
         // Request randomness from Chainlink VRF
         bytes32 requestId = requestRandomness(keyHash, fee);
@@ -65,13 +66,13 @@ contract ExclusiveContentNFT is ERC721Enumerable, Ownable, VRFConsumerBase {
     }
 
     // Set token URI for a specific token ID
-    function setTokenURI(uint256 tokenId, string memory tokenURI) external onlyOwner {
-        _setTokenURI(tokenId, tokenURI);
-    }
+    // function setTokenURI(uint256 tokenId, string memory tokenURI) external onlyOwner {
+    //     _setTokenURI(tokenId, tokenURI);
+    // }
 
     // Override function to return the URI for a token ID
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "Token does not exist");
+        // require(_exists(tokenId), "Token does not exist");
         return string(abi.encodePacked(_baseTokenURI, tokenId.toString(), ".json"));
     }
 

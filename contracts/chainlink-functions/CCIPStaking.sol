@@ -28,7 +28,7 @@ contract CrossChainStaking is Ownable {
         bytes memory data = abi.encode(amount, targetChainId);
 
         // Initiate a cross-chain message to record the stake on the target blockchain
-        ccip.sendMessage(targetChainId, data, /* nonce */);
+        ccip.sendMessage(targetChainId, data /* nonce */);
 
         emit Staked(owner(), amount);
     }
@@ -40,7 +40,7 @@ contract CrossChainStaking is Ownable {
         bytes memory data = abi.encode(amount, targetChainId);
 
         // Initiate a cross-chain message to record the unstake on the target blockchain
-        ccip.sendMessage(targetChainId, data, /* nonce */);
+        ccip.sendMessage(targetChainId, data /* nonce */);
 
         // Perform the unstaking action on the current blockchain
         stakedAmounts[msg.sender] -= amount;

@@ -1,16 +1,21 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {Counters} from  "@openzeppelin/contracts/utils/Counters.sol";
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+// import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-contract PodFiPlatform is Ownable {
+
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Counters} from  "../utils/Counters.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+
+contract PodFiPlatform is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _listenerId;
     Counters.Counter private _podcastId;
+    uint256 MAX_SUPPLY = 50;
 
     ERC20 public podToken; // PodFi's native token
     ERC721 public exclusiveContent; // NFT for exclusive content
@@ -61,7 +66,7 @@ contract PodFiPlatform is Ownable {
         address _exclusiveContent,
         uint256 _stakingDuration,
         uint256 _rewardAmount
-    ) {
+    ) ERC721 ("Franie", "FRN") {
         podToken = ERC20(_podToken);
         exclusiveContent = ERC721(_exclusiveContent);
         stakingDuration = _stakingDuration;
@@ -71,8 +76,14 @@ contract PodFiPlatform is Ownable {
     // Function to create a new podcast
     function createPodcast(string memory name) external {
         _podcastId.increment();
-        podcasts[_podcastId.current()] = Podcast(_podcastId.current(), msg.sender, name, 0);
-        emit PodcastCreated(_podcastId.current(), msg.sender);
+        uint256 podcastId = _podcastId.current();
+        podcasts[podcastId].id = podcastId;
+        podcasts[podcastId].creator = msg.sender;
+        podcasts[podcastId].name = name;
+        podcasts[podcastId].averageEngagement = 0;
+        emit PodcastCreated(podcastId, msg.sender);
+        // podcasts[_podcastId.current()] = Podcast(_podcastId.current(), msg.sender, name, 0);
+        // emit PodcastCreated(_podcastId.current(), msg.sender);
     }
 
     // Function for a listener to earn tokens
@@ -140,11 +151,12 @@ contract PodFiPlatform is Ownable {
     }
 
     // Function to mint NFTs tied to exclusive podcast content
-    function mintExclusiveContent(address to, string memory tokenURI) external onlyOwner {
-        _podcastId.increment();
+    function mintExclusiveContent(address to) public onlyOwner {
         uint256 newTokenId = _podcastId.current();
-        exclusiveContent.mint(to, newTokenId);
-        exclusiveContent.setTokenURI(newTokenId, tokenURI);
+        require(newTokenId <= MAX_SUPPLY, "Sorry, all NFTs have been minted!");
+        _podcastId.increment();
+        _safeMint(to, newTokenId);
+        // _setTokenURI(newTokenId, tokenURI );
     }
 
     // Owner function to start the staking period.
