@@ -17,3 +17,12 @@ The PodFi Contract is an innovative solution designed to transform the world of 
 
 PodFi is forward-thinking, not just within the podcasting sphere but also in the broader blockchain ecosystem. By incorporating Chainlink's Cross-Chain Interoperability Protocol (CCIP), PodFi enables the seamless transfer of NFTs across different blockchain networks, enhancing the value and accessibility of your exclusive content.
 
+### Deployed and Verified Addresses
+PodFi is deployed to 0xeF625Aa9c3C8140aFBd1C2ff2c25e92D8eeff8bF
+PodFi verified address is https://repo.sourcify.dev/contracts/full_match/534351/0xeF625Aa9c3C8140aFBd1C2ff2c25e92D8eeff8bF
+
+PodFiPodcast is deployed to 0xB44B7Bb77fBF7ACcb093d513642fF6Cf3A52C62e
+PodFiPodcast verified address is https://repo.sourcify.dev/contracts/full_match/534351/0xB44B7Bb77fBF7ACcb093d513642fF6Cf3A52C62e/
+
+PodfiAdsMarketplace is deployed to 0xfF002Ca6ef63b04dA543ADC1F56b184A57D5b038
+PodfiAdsMarketplace verified address is https://repo.sourcify.dev/contracts/full_match/534351/0xfF002Ca6ef63b04dA543ADC1F56b184A57D5b038/
